@@ -1,0 +1,90 @@
+services:
+  # MySQL Service
+  mysql:
+    image: mysql:8.0
+    container_name: mysqldb
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: sensors
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app_network
+
+  # phpMyAdmin Service
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin_ui
+    ports:
+      - "8081:80" 
+    environment:
+      PMA_HOST: mysql # Link phpMyAdmin to the MySQL service
+      MYSQL_ROOT_PASSWORD: 123456
+    depends_on:
+      - mysql # Ensure MySQL starts before phpMyAdmin
+    networks:
+      - app_network
+
+
+  # MongoDB Service
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017" 
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app_network
+    
+
+  # Neo4j Graph Database Service
+  neo4j:
+    image: neo4j:latest
+    container_name: neo4jdb
+    ports:
+      - "7474:7474" # HTTP/Browser access
+      - "7687:7687" # Bolt protocol for drivers
+    environment:
+      NEO4J_AUTH: neo4j/12345678 # username/pass
+    volumes:
+      - neo4j_data:/data
+    networks:
+      - app_network
+
+
+  # VerneMQ MQTT Broker Service
+  vernemq:
+    image: vernemq/vernemq
+    container_name: vernemq
+    ports:
+      - "1883:1883" # MQTT default port
+      - "8080:8080" # VerneMQ HTTP administration/websocket listener 
+    environment:
+      DOCKER_VERNEMQ_ACCEPT_EULA: "yes"
+      DOCKER_VERNEMQ_ALLOW_ANONYMOUS: "on"
+    volumes:
+      - vernemq_data:/var/lib/vernemq
+    networks:
+      - app_network
+
+
+
+
+
+volumes:
+  mysql_data:
+    name: mysql_data
+  mongodb_data:
+    name: mongodb_data
+  neo4j_data:
+    name: neo4j_data
+  vernemq_data:
+    name: vernemq_data
+
+
+networks:
+  app_network:
+    name: env_monitor
