@@ -4,7 +4,9 @@ import random
 import json
 from sensors_data import generate_air_quality_data, generate_temperature_data, generate_humidity_data
 
-broker_address = "localhost" # or the IP of your VerneMQ host/container
+#broker configuration
+
+broker_address = "localhost" 
 port = 1883
 
 TOPIC_AIR_QUALITY = 'sensors/air_quality'
@@ -14,7 +16,7 @@ cid = f"python-publisher"
 
 
 def on_connect(client, userdata, flags, rc):
-    if rc == 0:
+    if rc == 0:  #return code 
         print("Connected to MQTT Broker!")
     else:
         print(f"Failed to connect, return code {rc}\n")
@@ -22,11 +24,10 @@ def on_connect(client, userdata, flags, rc):
 client = mqtt.Client(client_id=cid) 
 client.on_connect = on_connect
 
-# If using authentication:
-# client.username_pw_set(username, password)
+
 
 client.connect(broker_address, port)
-client.loop_start() # Start a non-blocking loop for network traffic
+client.loop_start() # Start a non-blocking thread loop for network traffic
 
 
 
@@ -37,7 +38,7 @@ while True:
 
     # Generate and send air quality data
     air_quality_msg = json.dumps(generate_air_quality_data())
-    result = client.publish(TOPIC_AIR_QUALITY, air_quality_msg, qos=1)
+    result = client.publish(TOPIC_AIR_QUALITY, air_quality_msg, qos=1) #quality of service (At least once delivery)
     if result[0] == 0:
         print(f"Sent {TOPIC_AIR_QUALITY}: `{air_quality_msg}`")
     else:
@@ -45,7 +46,7 @@ while True:
 
     # Generate and send temperature data
     temp_msg = json.dumps(generate_temperature_data())
-    result = client.publish(TOPIC_TEMP, temp_msg, qos=1)
+    result = client.publish(TOPIC_TEMP, temp_msg, qos=1) 
     if result[0] == 0:
         print(f"Sent {TOPIC_TEMP}: `{temp_msg}`")
     else:

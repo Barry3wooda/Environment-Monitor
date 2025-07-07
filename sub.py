@@ -37,7 +37,7 @@ def on_connect(client, userdata, flags, rc):
         print("Connection failed")
 
 # function to insert temp data into MySQL
-cursor = mysql_conn.cursor()
+cursor = mysql_conn.cursor() 
 def mysql_temp_insert(cursor, data):
     try:
         # create table if not exists
@@ -89,12 +89,12 @@ def on_message(client, userdata, msg):
 
 # MQTT client
 client = mqtt.Client()
-# client.username_pw_set(username, password)
+
 client.on_connect = on_connect
 client.on_message = on_message
-# client.tls_set()  # Enable TLS
 
-client.connect(broker, port, 60)
+
+client.connect(broker, port, 60) # 60 seconds keepalive
 try:
     client.loop_forever()
 except KeyboardInterrupt:

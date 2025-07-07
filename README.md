@@ -25,6 +25,7 @@ The Environment Monitor system is designed to simulate and monitor environmental
 
 - **Python**: Core programming language for data generation, publishing, and subscribing.
 - **MQTT**: Protocol for lightweight messaging between publisher and subscriber.
+- **VerneMQ**: MQTT broker used for message handling.
 - **MongoDB**: NoSQL database for storing sensor data.
 - **MySQL**: Relational database for storing temperature data.
 - **Neo4j**: Graph database for storing relationships between sensors and environmental data.
@@ -54,7 +55,7 @@ The Environment Monitor system is designed to simulate and monitor environmental
     pip install -r requirements.txt
     ```
 
-3. **Set Up Databases Using Docker**:
+3. **Set Up Databases and MQTT Broker (VenrneMQ) Using Docker**:
 
     ```bash
     # run docker-compose.yaml
